@@ -1,9 +1,14 @@
-As a group, we held a Google meet call and discussed about the project.
-Below are the things we discussed on the meeting:
-1. Reviewed project requirements i.e. What the project is about, what is expected and how we shall do our deliverables.
-2. Agreed on project structure, the systematic architecure and folders necessary for this project
-3. Divided members into 2 working teams and found out ways of interchanging roles so everyone gets a role to play and have a broader knowledge of what we are doing as a group.
-4. Lastly, we created the GitHub repository and included other members as collaborators.
+# Week 01 Progress Report
 
-DISCLAIMER
-AI Was used to deeply explain and give the structural and visual detailed view of what the project requires, what we are building and what it will be used for. 
+As a group, we held a Google Meet call and discussed the project.
+
+Below are the things we discussed during the meeting:
+
+1. Reviewed project requirements, including what the project is about, what is expected, and how we will deliver our work.
+2. Agreed on the project structure, the system architecture, and the folders necessary for this project.
+3. Divided members into two working teams and found ways of exchanging roles so everyone gets a chance to contribute and learn more about what we are doing as a group.
+4. Created the GitHub repository and added other members as collaborators.
+
+## Disclaimer
+
+AI was used to explain the project structure and visual requirements in more detail, including what we are building and how it will be used.
