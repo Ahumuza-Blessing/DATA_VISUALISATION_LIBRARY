@@ -7,6 +7,8 @@
 
 class Axis{
     private:
+    double min_value;
+    double max_value;
     public:
 
 };
