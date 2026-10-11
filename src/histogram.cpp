@@ -1,4 +1,4 @@
-#include "dataviz/histogram.hpp"
+#include "histogram.hpp"
 
 #include <algorithm>
 #include <cmath>
