@@ -16,8 +16,8 @@ The next tasks are to:
 Review the project requirements with the group.
 Confirm which data-processing functions are needed.
 Check and finalize the header file.
-Implement the functions in a .cpp file during Phase 2.
-Test the functions during Phase 3.
+Implement the functions in a .cpp file 
+Test the functions used in our project
 Integrate the module with the statistics and plotting components.
 
 5. Challenges
