@@ -68,6 +68,9 @@ Histogram
     `-- binEdges()
 ```
 
+- Attached is a link to the image about the class private and public members as per instructions on slack:
+[Open the Week 3 histogram image](Fahad_histogram_week3.jpeg)
+
 ### Encapsulation
 
 The class design encapsulates the histogram's stored values. The data members are private implementation details, while public member functions provide read access to the calculated results. The vector accessors return const references, so callers can inspect the counts and edges without modifying the stored vectors through those accessors. The calculation and validation are kept inside the constructor rather than requiring callers to calculate the bins themselves.
