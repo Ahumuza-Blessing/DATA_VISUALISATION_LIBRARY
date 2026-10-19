@@ -20,3 +20,12 @@ add_executable(renderer_demo
 )
 
 target_link_libraries(renderer_demo PRIVATE dataviz)
+enable_testing()
+
+add_executable(renderer_test
+    tests/renderer_test.cpp
+)
+
+target_link_libraries(renderer_test PRIVATE dataviz)
+
+add_test(NAME RendererTest COMMAND renderer_test)
