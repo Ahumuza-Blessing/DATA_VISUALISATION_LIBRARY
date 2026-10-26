@@ -1,0 +1,35 @@
+
+#ifndef DATAVIZ_RENDERER_HPP
+#define DATAVIZ_RENDERER_HPP
+
+#include <string>
+#include <vector>
+
+namespace dataviz {
+
+struct Point {
+    double x;
+    double y;
+};
+
+struct Plot {
+    std::string title;
+    std::string x_label;
+    std::string y_label;
+    std::vector<Point> points;
+};
+
+class Renderer {
+public:
+    std::string render_svg(const Plot& plot) const;
+
+    bool save_svg(
+        const Plot& plot,
+        const std::string& filename
+    ) const;
+};
+
+} // namespace dataviz
+
+#endif
+
