@@ -1,6 +1,6 @@
 
 
-#include "dataviz/renderer.hpp"
+#include "renderer.hpp"
 
 #include <algorithm>
 #include <fstream>
