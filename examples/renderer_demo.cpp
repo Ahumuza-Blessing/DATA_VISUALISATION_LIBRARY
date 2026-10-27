@@ -1,6 +1,6 @@
 
 
-#include "dataviz/renderer.hpp"
+#include "renderer.hpp"
 
 #include <iostream>
 #include <string>
