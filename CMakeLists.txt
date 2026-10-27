@@ -6,12 +6,10 @@ project(DataVisualisationLibrary LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(dataviz
-    src/renderer.cpp
+add_library(renderer.cpp
 )
 
-target_include_directories(dataviz
-    PUBLIC
+target_include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
