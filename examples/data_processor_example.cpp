@@ -15,8 +15,7 @@ int main()
         40, 50
     };
 
-    cout << "DATA PROCESSING MODULE EXAMPLE\n";
-    cout << "------------------------------\n";
+    cout << "DATA PROCCESSOR MODULE EXAMPLE\n";
 
     // Step 1: Check whether data is empty
     if (isEmpty(rawData))
@@ -58,7 +57,7 @@ int main()
     cout << "Maximum value: "
          << findMaximum(clean) << "\n";
 
-    cout << "Data processing completed successfully.\n";
+    cout << "Data processor completed successfully.\n";
 
     return 0;
 }
