@@ -1,3 +1,4 @@
+
 # Individual Week 1 Progress Report: Histogram
 
 ## NAME: SERUGYA FAHAD

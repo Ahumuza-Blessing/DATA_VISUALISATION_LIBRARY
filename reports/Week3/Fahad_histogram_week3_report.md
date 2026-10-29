@@ -64,7 +64,7 @@ Histogram
 + static build(data, binCount) -> vector<HistogramBin>
 ```
 
-![Histogram API class and struct diagram](./Fahad_histogram_week3_class_diagram.jpeg)
+![Histogram API class and struct diagram](./Fahad_histogram_week3.jpeg)
 
 The digital diagram is a guide to the layout. The assignment asks me to draw the layout on paper, take a clear photo, and upload that photo alongside this report.
 

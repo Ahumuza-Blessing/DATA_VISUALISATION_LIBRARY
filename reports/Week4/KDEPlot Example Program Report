@@ -1,0 +1,95 @@
+KDEPlot Example Program Report
+Author: MUGERWA SHADRACK STEPHEN 
+ Subject: Review of the demonstration program for the KDEPlot kernel density estimation class
+1. Summary
+This report describes a short demonstration program that shows how to use the KDEPlot class from KDEPlot.hpp. The program creates a small dataset of student marks, asks KDEPlot::estimate for a kernel density curve made of 20 points, and prints each point to the console. It is intended as a usage example and a quick manual check that the library produces sensible output, rather than as an automated test.
+2. Program Description
+2.1 Headers
+Header
+Purpose
+KDEPlot.hpp
+Provides the KDEPlot class and the KDEPoint structure
+<iostream>
+Console output through std::cout
+<vector>
+Storage for the input data
+2.2 Input data
+The program uses twelve example marks:
+55, 60, 62, 65, 67, 70, 70, 72, 75, 80, 85, 90
+The main features of this dataset are:
+Property
+Value
+Number of values
+12
+Minimum
+55
+Maximum
+90
+Mean
+about 70.9
+Median
+71
+Repeated value
+70 appears twice
+The marks cluster in the 60s and 70s, with a thinner spread of higher marks up to 90. This gives the density curve a visible central bulge and a longer tail toward the high end, which is a realistic and easy-to-read example of a mark distribution.
+2.3 Program flow
+1. Define the marks vector.
+2. Call KDEPlot::estimate(marks, 20).
+3. Print a title and a separator line.
+4. Loop over the returned points and print each one as x = <value>, density = <value>.
+5. Return 0 to indicate success.
+2.4 The key call
+auto points = KDEPlot::estimate(marks, 20);
+Only the first two arguments are given. The third argument, bandwidth, takes its default of 0.0, which the interface treats as a request for automatic bandwidth selection. The result is a std::vector<KDEPoint> holding 20 (x, density) pairs.
+2.5 Output
+The program writes a heading followed by 20 lines in this form:
+KDE Plot Points
+---------------
+x = <x value>, density = <density value>
+x = <x value>, density = <density value>
+... (20 lines in total)
+The exact numbers depend on the implementation of the bandwidth rule and the chosen x-range, so they are not reproduced here. With the default stream settings, values print with up to six significant digits.
+3. What the Program Demonstrates
+• Minimal usage. A single function call turns raw data into plot-ready points.
+• Default bandwidth. It shows that the caller does not need to understand bandwidth selection to get a reasonable result.
+• Using the result. The range-based for loop with const auto& shows the intended way to read the returned KDEPoint values without copying them.
+• Realistic data. Marks are a familiar kind of data, so the example is easy for a new user to follow.
+4. Expected Behaviour
+If the library works correctly, the printed results should show the following:
+• Exactly 20 lines of points after the heading.
+• The x values rising steadily from left to right, spanning at least the data range of 55 to 90.
+• All density values greater than or equal to zero.
+• Densities that rise toward the middle of the data, in the region of the 60s and 70s, where most marks lie, and fall away toward both ends.
+• A very small total area under the curve in relation to the x-range, with density values that are small decimals rather than large numbers, since a density integrates to 1 across the whole range.
+These expectations can be checked by eye from the console output, or by pasting the values into a spreadsheet and drawing a line chart.
+5. Observations and Suggestions
+5.1 Strengths
+• Short, readable and easy to compile.
+• Uses only standard library headers apart from the class under test.
+• Comments explain the purpose of the data and of the point count.
+• Uses const auto& in the loop, which avoids unnecessary copies.
+5.2 Possible improvements
+1. Error handling. estimate throws std::invalid_argument for empty data or a point count below 2. Wrapping the call in a try/catch block would show users how to deal with this and stop the program from terminating abruptly.
+2. Fixed formatting. Using <iomanip> with std::fixed and std::setprecision would line up the output and make it easier to read and compare.
+3. Showing the bandwidth option. A second call with an explicit bandwidth, for example 3.0 or 5.0, would let users see how a smaller or larger value changes the smoothness of the curve.
+4. Exporting for plotting. Printing as comma-separated values, or writing to a .csv file, would let the output be loaded straight into a spreadsheet, Python or a plotting tool. The program as written only produces text, so no graph is drawn.
+5. A text-based preview. A simple row of * characters scaled to each density would give a quick visual impression of the curve in the terminal.
+6. Sanity check. Adding a trapezoidal estimate of the area under the curve and printing it would confirm that the total is close to 1.
+6. How to Build and Run
+Assuming this file is saved as main.cpp next to KDEPlot.cpp:
+g++ -std=c++17 -Wall -Wextra KDEPlot.cpp main.cpp -o kde_demo
+./kde_demo
+The file names are assumptions and should be adjusted to match the project layout.
+7. Relationship to the Rest of the Project
+The project now has three parts that work together:
+Part
+Role
+Header (KDEPlot.hpp)
+Declares the interface: KDEPoint and KDEPlot::estimate
+Test program
+Checks automatically that the interface behaves correctly, including error cases
+This example program
+Shows a user how to call the interface and read its results
+The example complements the test suite. The tests give confidence that the library is correct, while the example shows how it is used in practice.
+8. Conclusion
+The example program is a clear and compact demonstration of KDEPlot. It uses realistic data, relies on sensible defaults and shows how to read the returned points. Adding error handling, formatted or CSV output, and an example with a custom bandwidth would make it a more complete guide for new users and would make it easier to feed the results into a chart.
