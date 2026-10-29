@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-// Unlike the previous constructor, this returns bins directly instead of
-// storing range, edge, and count state on a Histogram object.
+// I find the range and bin width before counting the values.
 std::vector<HistogramBin> Histogram::build(
     const std::vector<double>& data,
     std::size_t binCount
@@ -21,8 +20,6 @@ std::vector<HistogramBin> Histogram::build(
     double maxValue = *std::max_element(data.begin(), data.end());
 
     if (minValue == maxValue) {
-        // The previous implementation widened this range; now one zero-width
-        // bin represents all identical values.
         return {{minValue, maxValue, data.size()}};
     }
 
