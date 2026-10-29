@@ -1,29 +1,31 @@
-#ifndef DATA_PROCESSOR_H
-#define DATA_PROCESSOR_H
+#ifndef DATAPROCESSOR_HPP
+#define DATAPROCESSOR_HPP
 
-#include <vector>
+#include <cstddef>
 #include <string>
+#include <vector>
 
-namespace DataProcessor {
+// The data we load may have extra spaces or invalid values.
+// These functions will prepare it before we calculate the graphs.
+class DataProcessor {
+public:
+    // The rest of the library will use this public interface.
+    using Table = std::vector<std::vector<std::string>>;
 
-    // Check whether the dataset is empty
-    bool isEmpty(const std::vector<double>& data);
+    static std::string trim(const std::string& value);
 
-    // Check whether all values are valid numbers
-    bool validateData(const std::vector<double>& data);
+    static Table cleanRows(const Table& table);
 
-    // Remove invalid values from the dataset
-    std::vector<double> cleanData(const std::vector<double>& data);
+    static std::vector<std::string> getColumn(
+        const Table& table,
+        std::size_t columnIndex,
+        bool skipHeader = true
+    );
 
-    // Normalize data to a range between 0 and 1
-    std::vector<double> normalizeData(const std::vector<double>& data);
-
-    // Calculate the minimum value
-    double findMinimum(const std::vector<double>& data);
-
-    // Calculate the maximum value
-    double findMaximum(const std::vector<double>& data);
-
-}
+    static std::vector<double> toNumeric(
+        const std::vector<std::string>& values,
+        bool ignoreInvalid = true
+    );
+};
 
 #endif
