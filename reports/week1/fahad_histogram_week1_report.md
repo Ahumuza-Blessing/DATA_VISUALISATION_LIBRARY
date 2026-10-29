@@ -22,7 +22,7 @@
 
 ## Next Week
 
-- Design and create the `histogram.hpp` file.
+- Design and create the `include/Histogram.hpp` file.
 - Define the Histogram class, its attributes, and its main methods.
 - Begin implementing the binning and frequency-counting logic.
 
@@ -39,13 +39,11 @@
 - The histogram counts how many values fall into each bin.
 - The height of each bar represents the frequency of values within that bin.
 
-## Planned design for the Histogram class
+## Initial planned design for the Histogram class
 
-- The class will store numerical data values.
-- It will contain settings for the number of bins or bin width.
-- It will calculate the minimum and maximum values in the dataset.
-- It will group values into bins and calculate the frequency for each bin.
-- It will provide methods to display or return histogram information for visualisation.
+- The initial plan was for the class to store numerical data and histogram settings.
+- The implementation was later simplified: `include/Histogram.hpp` now declares a `HistogramBin` type and a static `Histogram::build` function.
+- `Histogram::build` returns each bin's lower bound, upper bound, and frequency; the implementation is in `src/Histogram.cpp`.
 
 ## AI Use
 
@@ -65,5 +63,5 @@ This week mainly involved planning, understanding my assigned role, and preparin
 2. NIST/SEMATECH. Histogram Class Width. Discusses bin/class-width selection and why it affects the resulting histogram.
 <https://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/histwidt.html>
 
-3. cppreference. C++ Standard Library <vector> Useful for the std::vector data storage you may use in histogram.hpp.
+3. cppreference. C++ Standard Library <vector>, used by the interface in `include/Histogram.hpp`.
 <https://en.cppreference.com/w/cpp/header/vector>
