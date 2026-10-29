@@ -1,10 +1,10 @@
 
-#include "DataProcessing.h"
+#include "DataProcessor.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
-namespace DataProcessing {
+namespace DataProcessor {
 
     bool isEmpty(const std::vector<double>& data) {
         return data.empty();

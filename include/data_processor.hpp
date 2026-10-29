@@ -1,10 +1,10 @@
-#ifndef DATA_PROCESSING_H
-#define DATA_PROCESSING_H
+#ifndef DATA_PROCESSOR_H
+#define DATA_PROCESSOR_H
 
 #include <vector>
 #include <string>
 
-namespace DataProcessing {
+namespace DataProcessor {
 
     // Check whether the dataset is empty
     bool isEmpty(const std::vector<double>& data);
