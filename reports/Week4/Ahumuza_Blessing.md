@@ -3,9 +3,7 @@
 Project: C++ Data Visualization Library  
 Module: Statistics  
 Member: Ahumuza Blessing
-
  # Objectives
-
 1. Implement the statistical functions defined in the Statistics header file.
 2. Improve the handling of different datasets, including empty datasets and identical values.
 3. Implement histogram binning and Kernel Density Estimation calculations.
