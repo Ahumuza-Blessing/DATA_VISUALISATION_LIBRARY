@@ -10,19 +10,20 @@
 1. All members created separate branches.
 2. Members were assigned different parts of the project.
 3. Header files were created by the members according to their assigned modules.
+4. Each member made a report of their assigned part and their progress made.
 
 # Team Members Work Allocations
 
-1. TWINOMUJUNI ROMEO – Axis
-2. AHUMUZA BLESSING – Statistics
-3. ADONGA PHILLIP – Data Loader
-4. SERUGYA FAHAD – Histogram
-5. EGERU MICHAEL – Count Plot
-6. ATWINE JEANES – Data Processing
-7. WALUGEMBE MUHAISINAH N. – Annotations
-8. NAMUBIRU LOUISE – Image Exporter
-9. MUGERWA SHADRACK STEPHEN – KDE Plot
-10. KISAKYE JEMIMA – Renderer
+1. TWINOMUJUNI ROMEO _ Axis
+2. AHUMUZA BLESSING _Statistics
+3. ADONGA PHILLIP _data Loader
+4. SERUGYA FAHAD _Histogram
+5. EGERU MICHAEL _ Count Plot
+6. ATWINE JEANES _ Data Processing
+7. WALUGEMBE MUHAISINAH N. _ Annotations
+8. NAMUBIRU LOUISE _ Image Exporter
+9. MUGERWA SHADRACK STEPHEN _ KDE Plot
+10. KISAKYE JEMIMA _ Renderer
 
 # Challenges Experienced
 

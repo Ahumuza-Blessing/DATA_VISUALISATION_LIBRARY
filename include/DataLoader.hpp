@@ -1,23 +1,31 @@
-#ifndef DATA_LOADER_HPP
-#define DATA_LOADER_HPP
+#ifndef DATAPROCESSOR_HPP
+#define DATAPROCESSOR_HPP
 
 #include <cstddef>
 #include <string>
 #include <vector>
 
-class DataLoader
-{
-private:
-    std::vector<std::string> headers;
-    std::vector<std::vector<std::string>> rows;
-
+// The data we load may have extra spaces or invalid values.
+// These functions will prepare it before we calculate the graphs.
+class DataProcessor {
 public:
-    bool loadCSV(const std::string& filename);
+    // The rest of the library will use this public interface.
+    using Table = std::vector<std::vector<std::string>>;
 
-    const std::vector<std::string>& getHeaders() const;
-    const std::vector<std::vector<std::string>>& getRows() const;
+    static std::string trim(const std::string& value);
 
-    std::size_t getRowCount() const;
+    static Table cleanRows(const Table& table);
+
+    static std::vector<std::string> getColumn(
+        const Table& table,
+        std::size_t columnIndex,
+        bool skipHeader = true
+    );
+
+    static std::vector<double> toNumeric(
+        const std::vector<std::string>& values,
+        bool ignoreInvalid = true
+    );
 };
 
 #endif
