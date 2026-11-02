@@ -1,47 +1,14 @@
+#include "Annotation.hpp"
 
-#include "Annotations.hpp"
-
-namespace dataviz {
-
-// Implement the Annotation constructor
-Annotation::Annotation(double xPosition, double yPosition,
-                       const std::string& annotationText)
-    : x(xPosition), y(yPosition), text(annotationText) {
+// I keep the notes in the order they were added to the graph.
+void Annotation::add(double x, double y, const std::string& text) {
+    items.push_back({x, y, text});
 }
 
-// Return the x-coordinate
-double Annotation::getX() const {
-    return x;
+void Annotation::clear() {
+    items.clear();
 }
 
-// Return the y-coordinate
-double Annotation::getY() const {
-    return y;
+const std::vector<AnnotationItem>& Annotation::getItems() const {
+    return items;
 }
-
-// Return the annotation text
-std::string Annotation::getText() const {
-    return text;
-}
-
-// Add an annotation to the collection
-void Annotations::add(const Annotation& annotation) {
-    annotations.push_back(annotation);
-}
-
-// Return all stored annotations
-const std::vector<Annotation>& Annotations::getAll() const {
-    return annotations;
-}
-
-// Check whether the collection is empty
-bool Annotations::empty() const {
-    return annotations.empty();
-}
-
-// Remove all annotations
-void Annotations::clear() {
-    annotations.clear();
-}
-
-} // namespace dataviz
