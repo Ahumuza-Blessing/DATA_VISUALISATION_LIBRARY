@@ -4,30 +4,27 @@
 
 ## Completed
 
-This week, I implemented the histogram calculations in `src/histogram.cpp` for the `Histogram` class. The constructor checks the input, finds the data range, creates the bin edges, and counts how many values fall into each bin. I also implemented the member functions that return the histogram's bin settings, counts, and edges.
+This week, I implemented the histogram calculations in `src/Histogram.cpp`. The public interface is declared in `include/Histogram.hpp`: `Histogram::build` takes a vector of values and a bin count, and returns a vector of `HistogramBin` values. Each bin contains its lower bound, upper bound, and count.
 
-The constructor rejects empty data, a bin count of zero, and values that are `NaN` or infinity by throwing `std::invalid_argument`. It finds the minimum and maximum with `std::minmax_element`. If all values are equal, it widens the range by 0.5 on either side so that the bins have a non-zero width.
+`HistogramBin` is a separate struct declared outside the `Histogram` class. Its `lower_`, `upper_`, and `count_` data members are private. Public `lower()`, `upper()`, and `count()` getter functions provide read-only access to the bin's bounds and frequency.
 
-The bin edges divide the range into equal-width intervals. The final edge is set directly to the range maximum to avoid accumulated floating-point rounding differences. The program then assigns each value to a bin and increments that bin's count. If a value produces an index equal to the number of bins, it is placed in the last bin so that the maximum value is included.
+The function rejects empty data, a bin count of zero, and non-finite values such as `NaN` or positive and negative infinity by throwing `std::invalid_argument`. It finds the minimum and maximum with `std::min_element` and `std::max_element`. If all values are equal, it returns one zero-width bin containing all values.
+
+Otherwise, the function divides the range into equal-width bins and sets the upper bound of the final bin directly to the maximum value. Each value is assigned to a bin and increments its count. If the calculated index is at or beyond the bin count, it is clamped to the last bin so the maximum value is included.
 
 ## In Progress
 
-I am reviewing the implementation and its edge cases, especially how values at the maximum boundary and datasets with identical values are handled. The calculations are implemented, and the next step is to verify them with tests and sample data.
+I tested the implementation with ordinary data, identical values, a zero bin count, and non-finite values. The checks confirmed the bin counts and bounds, and that `std::invalid_argument` is thrown for a zero bin count, `NaN`, and both positive and negative infinity. Compile-time checks also confirm that `HistogramBin` cannot be copy- or move-assigned.
 
 ## Challenges/Blockers
 
 One challenge was ensuring that a value equal to the maximum does not produce an index outside the vector of bin counts. The implementation places such a value in the final bin.
 
-Another case was a dataset where every value is the same. Without widening the range, the bin width would be zero. The constructor widens the range in this case before calculating the bin width.
+Another case was a dataset where every value is the same. The implementation handles it separately by returning one zero-width bin containing every value.
 
-## Next Week
+## Next Steps
 
-Next week, I will:
-
-- Test the histogram with normal data, boundary values, and identical values.
-- Check that the sum of all bin counts equals the number of input values.
-- Check that the reported range, bin width, edges, and maximum count are correct.
-- Review how other parts of the library will use the histogram results.
+The next step is to integrate the returned bins with the library's visualization components and review the histogram API as those components are developed.
 
 ## BRIEF SUMMARY ON THE HISTOGRAM (Recap from week 2)
 
@@ -37,56 +34,57 @@ A histogram is a graph that shows how numerical data is distributed. It groups v
 
 ## How Binning Works in My Implementation
 
-The constructor takes a vector of numerical values and a requested number of bins. It finds the minimum and maximum values, divides the range into equal-width bins, stores the bin boundaries, and counts the values in each bin. The bin edges are stored as `numBins + 1` values because each bin has a starting and ending edge.
+`Histogram::build` takes a vector of numerical values and a requested number of bins. It finds the minimum and maximum values, divides the range into equal-width bins, and counts the values in each bin. The returned vector has one `HistogramBin` per bin, with each bin carrying its own lower and upper bounds.
 
-The counts and edges are retained in vectors. `totalCount()` adds the bin frequencies, while `maxCount()` returns the largest frequency in any bin.
+The counts and bounds are returned in the bins; the caller can inspect or aggregate them as needed.
 
 ## Class Structure and Organisation
 
 ### What class did I implement?
 
-I implemented the `Histogram` class in the `dataviz` namespace. The source file defines its constructor and member functions.
+I implemented the global `Histogram` class interface declared in `include/Histogram.hpp`. The source file `src/Histogram.cpp` defines its static `build` function.
 
 ### Class layout
 
-The class layout, following the design described in my Week 2 report, is:
+The header declares a standalone `HistogramBin` struct and a separate `Histogram` class. In this diagram, `+` means public and `-` means private; neither type has protected (`#`) members:
 
 ```text
+HistogramBin struct
++ lower() const -> double
++ upper() const -> double
++ count() const -> std::size_t
++ copy/move constructors
++ copy/move assignment = delete
+- HistogramBin(lower, upper, count) [friend: Histogram]
+- double lower_
+- double upper_
+- std::size_t count_
+
 Histogram
-|-- private data
-|   |-- numBins_     : number of bins
-|   |-- rangeMin_    : lower end of the histogram range
-|   |-- rangeMax_    : upper end of the histogram range
-|   |-- binWidth_    : width of each bin
-|   |-- counts_      : frequency for each bin
-|   `-- binEdges_    : boundaries of the bins
-`-- public functions
-    |-- Histogram(data, numBins)
-    |-- numBins(), rangeMin(), rangeMax(), binWidth()
-    |-- totalCount(), maxCount()
-    |-- counts()
-    `-- binEdges()
++ static build(data, binCount) -> vector<HistogramBin>
 ```
 
-- Attached is a link to the image about the class private and public members as per instructions on slack:
-[Open the Week 3 histogram image](Fahad_histogram_week3.jpeg)
+![Histogram API class and struct diagram](./Fahad_histogram_week3.jpeg)
 
-### Encapsulation
+The digital diagram is a guide to the layout. The assignment asks me to draw the layout on paper, take a clear photo, and upload that photo alongside this report.
 
-The class design encapsulates the histogram's stored values. The data members are private implementation details, while public member functions provide read access to the calculated results. The vector accessors return const references, so callers can inspect the counts and edges without modifying the stored vectors through those accessors. The calculation and validation are kept inside the constructor rather than requiring callers to calculate the bins themselves.
+### Access Specifiers and Encapsulation
+
+`Histogram` explicitly marks `build` as `public` and has no private or protected members. Although `HistogramBin` is declared with `struct`, its stored values are in a `private` section. Its public `const` getters allow inspection without mutation; there are no setters, and copy/move assignment operators are deleted. `Histogram` is a friend so its `build` function can construct and count bins. This encapsulates each bin's values while returning bins by value.
 
 ### Inheritance and Polymorphism
 
-This implementation does not use inheritance or polymorphism. `Histogram` is implemented as a standalone class; the source contains no base class, derived class, virtual function, or override. These concepts are not needed for the current histogram calculation. The class layout drawing should therefore show `Histogram` on its own, without an inheritance relationship.
+This implementation does not use inheritance or polymorphism. `Histogram` is a standalone class, and `HistogramBin` is a separate struct; neither inherits from nor is a base class for another type. There are no virtual functions or overrides. These concepts are not used in the current histogram implementation.
 
 ### How the class is used
 
-The class is constructed with numerical data and a bin count. Construction validates the input and calculates the histogram. Other parts of the program can then call its public functions to obtain the range, bin width, total and maximum frequencies, bin counts, and bin edges.
+The function is called with numerical data and a bin count. It validates the supported input conditions and calculates the bins. Other parts of the program can then use each returned bin's bounds and frequency.
 
 ## References
 
-- Project implementation: `src/histogram.cpp`.
+- Public interface: `include/Histogram.hpp`.
+- Project implementation: `src/Histogram.cpp`.
 - NIST/SEMATECH, *Histogram* — an overview of histograms and frequency distributions:
   <https://www.itl.nist.gov/div898/handbook/eda/section3/eda33e.html>
-- cppreference, *std::minmax_element* — used to find the minimum and maximum data values:
-  <https://en.cppreference.com/w/cpp/algorithm/minmax_element>
+- cppreference, *std::min_element* and *std::max_element* — used to find the minimum and maximum data values:
+  <https://en.cppreference.com/w/cpp/algorithm/min_element>

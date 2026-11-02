@@ -4,33 +4,33 @@
 
 ## Completed
 
-This week, I worked on the histogram component of the data visualisation library. I created the `histogram.hpp` file and declared one class called `Histogram` inside the `dataviz` namespace.
+This week, I worked on the histogram component of the data visualisation library and drafted the `Histogram` class design. The checked-in interface is now in `include/Histogram.hpp`.
 
-The header file contains the class structure. It shows the data the class will store and the functions that will later be implemented in the `.cpp` file.
+The design was later simplified from a stateful class to a static builder. The header declares `HistogramBin`, which stores a bin's lower bound, upper bound, and count, and `Histogram::build`, which returns a vector of bins. Its implementation is in `src/Histogram.cpp`.
 
 ## In Progress
 
-I am reviewing the design of the `Histogram` class and preparing to implement its functions. At this stage, the class has been declared in the header file (histogram.hpp), but the function definitions have not yet been written in cpp source/implementation file (histogram.cpp).
+I am reviewing the binning behavior and its edge cases. The implementation in `src/Histogram.cpp` validates empty input and a zero bin count, finds the data minimum and maximum, and calculates bin boundaries and counts.
 
 ## Challenges/Blockers
 
-One issue I considered was how to make sure values on the boundaries of bins are counted correctly. The class design solves this by using bin ranges in the form `[edges[i], edges[i+1])`. This means a value is included at the start of a bin but not normally at the end.
+One issue is making sure values on the boundaries of bins are counted correctly. `Histogram::build` assigns values using their offset from the minimum and the bin width.
 
-The final bin includes its upper edge so that the largest value in the dataset is included.
+The largest value is included in the final bin, including when its calculated index reaches the number of bins.
 
-I also considered invalid input. The constructor is designed to reject empty data, zero bins, and invalid numbers such as `NaN (Not a valid Number)` or infinity.
+The function rejects empty data, a bin count of zero, and non-finite values such as `NaN` or positive and negative infinity by throwing `std::invalid_argument`.
 
 ## Next Week
 
-Next week, I will create the `histogram.cpp` file and implement the functions declared in `histogram.hpp`.
+Next week, I will continue implementing and testing `Histogram::build` in `src/Histogram.cpp`, using the interface in `include/Histogram.hpp`.
 
 I will write the code for:
 
 - Finding the minimum and maximum values in the dataset.
 - Calculating the width of each bin.
-- Creating the bin edges.
+- Creating each bin's lower and upper bounds.
 - Counting how many values fall into each bin.
-- Returning the total number of values and the highest bin count.
+- Returning the bins and their counts.
 - Testing the class with sample numerical data.
 
 ## BRIEF SUMMARY ON THE HISTOGRAM
@@ -55,51 +55,31 @@ I created one class called `Histogram`.
 
 ### Why did I create this class?
 
-I created the `Histogram` class to keep all histogram-related work in one place. The class will handle numerical data, divide the data into bins, and store the frequency of values in each bin.
+I created the `Histogram` class to keep the binning calculation in one place. Its `build` function divides numerical data into bins and returns their frequencies.
 
 This makes the program more organised because other parts of the project do not need to perform the binning calculations themselves.
 
-### What data does the class hold?
+### What is the `HistogramBin` struct?
 
-The `Histogram` class has the following private data members:
+In `include/Histogram.hpp`, `struct HistogramBin` defines the data returned for one histogram bin. Although struct members are public by default in C++, this struct explicitly declares its stored values private:
 
-- `numBins_` stores the number of bins.
-- `rangeMin_` stores the smallest value in the dataset.
-- `rangeMax_` stores the largest value in the dataset.
-- `binWidth_` stores the width of each bin.
-- `counts_` stores the number of values in each bin.
-- `binEdges_` stores the boundaries of the bins.
+- `lower_` stores the bin's lower bound and is read through `lower()`.
+- `upper_` stores the bin's upper bound and is read through `upper()`.
+- `count_` stores how many input values were assigned to the bin and is read through `count()`.
 
-### What functions operate on the data?
+These getters are `const`, and there are no setters. Copy and move assignment are deleted, so callers cannot replace one bin's value with another. `Histogram::build` returns a `std::vector<HistogramBin>`, so each element represents one bin whose values can be inspected but not changed through the public interface.
 
-The class has a constructor:
+### What function performs the calculation?
 
-- `Histogram(const std::vector<double>& data, std::size_t numBins)`
+`Histogram::build(const std::vector<double>& data, std::size_t binCount)` is declared in `include/Histogram.hpp` and implemented in `src/Histogram.cpp`. It returns a `std::vector<HistogramBin>`. The bin count defaults to 10 when the caller does not provide one.
 
-The constructor receives the numerical data and the number of bins.
+### Why does the current interface return bins?
 
-The class also has public member functions:
-
-- `numBins()` returns the number of bins.
-- `rangeMin()` returns the minimum value.
-- `rangeMax()` returns the maximum value.
-- `binWidth()` returns the width of each bin.
-- `totalCount()` returns the total number of values processed.
-- `maxCount()` returns the highest frequency in any bin.
-- `counts()` returns the frequency counts.
-- `binEdges()` returns the bin boundaries.
-
-These functions are declared in the header file and will be implemented in `histogram.cpp` next week.
-
-### Why are some members private and others public?
-
-The data members are private because they are internal details of the class. Other parts of the program should not change them directly, because this could lead to incorrect histogram results.
-
-The member functions are public because they allow other parts of the program to safely access histogram information. For example, another part of the visualisation library can call `counts()` to get the bin frequencies without changing the stored data.
+The interface returns calculated bins directly rather than keeping histogram state on a `Histogram` object. Callers can inspect a returned bin using `lower()`, `upper()`, and `count()`, but cannot modify its stored values.
 
 ### How will the class be used in the program?
 
-The rest of the program will create a `Histogram` object by giving it numerical data and a number of bins. The class will then calculate the histogram information. Other parts of the project can use the public functions to obtain the bin edges, frequency counts, and other results needed to display the histogram.
+The rest of the program calls `Histogram::build(data, binCount)` and uses the returned bins to obtain the bounds and frequency counts needed to display the histogram.
 
 ## References
 
