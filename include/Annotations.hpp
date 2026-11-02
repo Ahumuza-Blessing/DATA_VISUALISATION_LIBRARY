@@ -44,6 +44,6 @@ public:
     void clear();
 };
 
-} // namespace dataviz
+}
 
-#endif // ANNOTATIONS_HPP
+#endif
