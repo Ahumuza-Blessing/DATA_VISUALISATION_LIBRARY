@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(DataVisualizationLibrary VERSION 1.0 LANGUAGES CXX)
 
-# The library uses only standard C++17 and does not require plotting packages.
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -19,47 +18,69 @@ add_library(dataviz
     src/Renderer.cpp
     src/ImageExporter.cpp
 )
+
 target_include_directories(dataviz PUBLIC include)
 
-# This points to the repository's actual output folder, even when an example
-# is launched from build/ or build/Debug on another computer.
-target_compile_definitions(dataviz PRIVATE
-    DATAVIZ_DEFAULT_OUTPUT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/output"
-)
+# Full-library demo plus standalone examples for individual modules.
+add_executable(dataviz_example examples/example.cpp)
+target_link_libraries(dataviz_example PRIVATE dataviz)
 
-# We copy our sample file into the build directory for the graph demonstrations.
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/data/input")
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/data/input/sample.csv"
-    "${CMAKE_CURRENT_BINARY_DIR}/data/input/sample.csv"
-    COPYONLY
-)
+add_executable(kdeplot_example examples/kdeplot_example.cpp)
+target_link_libraries(kdeplot_example PRIVATE dataviz)
 
-# Examples are complete SVG graphs, not separate demos of the helper modules.
-foreach(name histogram kdeplot countplot complete_library)
-    add_executable(${name}_example examples/${name}_example.cpp)
-    target_link_libraries(${name}_example PRIVATE dataviz)
-endforeach()
+add_executable(axis_example examples/axis_example.cpp)
+target_link_libraries(axis_example PRIVATE dataviz)
+
+add_executable(statistics_example examples/statistics_example.cpp)
+target_link_libraries(statistics_example PRIVATE dataviz)
 
 enable_testing()
 
-# Each individual test checks its module's calculations and basic behaviour.
-function(add_dataviz_test name)
-    add_executable(${name} tests/${name}.cpp)
-    target_link_libraries(${name} PRIVATE dataviz)
-    # Keep the assert() checks enabled even when using a Release build.
+# Each test is independently runnable. Use Debug builds to keep asserts enabled.
+function(add_dataviz_test target source)
+    add_executable(${target} ${source})
+    target_link_libraries(${target} PRIVATE dataviz)
     if(MSVC)
-        target_compile_options(${name} PRIVATE /UNDEBUG)
+        target_compile_options(${target} PRIVATE /UNDEBUG)
     else()
-        target_compile_options(${name} PRIVATE -UNDEBUG)
+        target_compile_options(${target} PRIVATE -UNDEBUG)
     endif()
-    add_test(NAME ${name} COMMAND ${name})
+    add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
-foreach(module dataloader dataprocessor statistics histogram kdeplot
-               countplot axis annotation renderer imageexporter)
-    add_dataviz_test(test_${module})
-endforeach()
+add_dataviz_test(dataviz_tests tests/test_library.cpp)
+add_dataviz_test(test_kdeplot tests/test_kdeplot.cpp)
+add_dataviz_test(test_axis tests/test_axis.cpp)
+add_dataviz_test(test_statistics tests/test_statistics.cpp)
+add_dataviz_test(test_components tests/test_components.cpp)
 
-# The final test loads one CSV and makes sure all three plots can be exported.
-add_dataviz_test(test_integration)
+# Individual examples and tests for each remaining module.
+add_executable(dataloader_example examples/dataloader_example.cpp)
+target_link_libraries(dataloader_example PRIVATE dataviz)
+add_dataviz_test(test_dataloader tests/test_dataloader.cpp)
+
+add_executable(dataprocessor_example examples/dataprocessor_example.cpp)
+target_link_libraries(dataprocessor_example PRIVATE dataviz)
+add_dataviz_test(test_dataprocessor tests/test_dataprocessor.cpp)
+
+add_executable(countplot_example examples/countplot_example.cpp)
+target_link_libraries(countplot_example PRIVATE dataviz)
+add_dataviz_test(test_countplot tests/test_countplot.cpp)
+
+add_executable(histogram_example examples/histogram_example.cpp)
+target_link_libraries(histogram_example PRIVATE dataviz)
+add_dataviz_test(test_histogram tests/test_histogram.cpp)
+
+add_executable(annotation_example examples/annotation_example.cpp)
+target_link_libraries(annotation_example PRIVATE dataviz)
+add_dataviz_test(test_annotation tests/test_annotation.cpp)
+
+add_executable(renderer_example examples/renderer_example.cpp)
+target_link_libraries(renderer_example PRIVATE dataviz)
+add_dataviz_test(test_renderer tests/test_renderer.cpp)
+
+add_executable(imageexporter_example examples/imageexporter_example.cpp)
+target_link_libraries(imageexporter_example PRIVATE dataviz)
+add_dataviz_test(test_imageexporter tests/test_imageexporter.cpp)
+
+
