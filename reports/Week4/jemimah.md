@@ -1,5 +1,4 @@
 
-
 UML Class Diagrams for a Data Visualization Project
 1. Introduction
 This assignment involved studying the structure of an existing data visualization project and representing it using UML class diagrams. UML class diagrams help to show the different parts of a program, the information stored in each class, the operations performed, and how the classes relate to one another.
