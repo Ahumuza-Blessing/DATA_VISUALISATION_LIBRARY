@@ -1,42 +1,40 @@
-#ifndef DATAVIZ_HISTOGRAM_HPP
-#define DATAVIZ_HISTOGRAM_HPP
+#ifndef HISTOGRAM_HPP
+#define HISTOGRAM_HPP
 
 #include <cstddef>
 #include <vector>
 
-namespace dataviz {
-
-// Divides numeric data into equal-width bins and counts how many
-// values fall into each bin.
-class Histogram {
+// A histogram divides numerical values into groups called bins.
+// Each bin stores its lower limit, upper limit, and number of values.
+struct HistogramBin {
 public:
-    // Throws std::invalid_argument if data is empty, numBins is 0,
-    // or data contains NaN/infinity.
-    Histogram(const std::vector<double>& data, std::size_t numBins);
+    HistogramBin(const HistogramBin&) = default;
+    HistogramBin(HistogramBin&&) noexcept = default;
+    HistogramBin& operator=(const HistogramBin&) = delete;
+    HistogramBin& operator=(HistogramBin&&) = delete;
 
-    std::size_t numBins() const;
-    double rangeMin() const;
-    double rangeMax() const;
-    double binWidth() const;
-    std::size_t totalCount() const;
-    std::size_t maxCount() const;
-
-    // counts()[i] is the number of values in bin i.
-    const std::vector<std::size_t>& counts() const;
-
-    // numBins + 1 edges: bin i covers [edges[i], edges[i+1]).
-    // The last bin also includes its upper edge.
-    const std::vector<double>& binEdges() const;
+    double lower() const noexcept { return lower_; }
+    double upper() const noexcept { return upper_; }
+    std::size_t count() const noexcept { return count_; }
 
 private:
-    std::size_t numBins_;
-    double rangeMin_;
-    double rangeMax_;
-    double binWidth_;
-    std::vector<std::size_t> counts_;
-    std::vector<double> binEdges_;
+    friend class Histogram;
+
+    HistogramBin(double lower, double upper, std::size_t count)
+        : lower_(lower), upper_(upper), count_(count) {}
+
+    double lower_;
+    double upper_;
+    std::size_t count_;
 };
 
-}  // namespace dataviz
+class Histogram {
+public:
+    // The rest of the library will use this public interface.
+    static std::vector<HistogramBin> build(
+        const std::vector<double>& data,
+        std::size_t binCount = 10
+    );
+};
 
-#endif  // DATAVIZ_HISTOGRAM_HPP
+#endif
