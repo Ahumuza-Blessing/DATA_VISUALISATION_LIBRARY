@@ -147,7 +147,7 @@ The main project files are organized as follows.
 │   ├── test_kdeplot.cpp
 │   ├── test_axis.cpp
 │   ├── test_annotation.cpp
-│   ├── renderer_test.cpp
+│   ├── test_renderer.cpp
 │   └── test_imageexporter.cpp
 ├── reports/
 ├── .gitignore

@@ -62,4 +62,4 @@ add_dataviz_test(test_axis)
 add_dataviz_test(test_annotation)
 add_dataviz_test(test_imageexporter)
 
-add_dataviz_test(renderer_test)
+add_dataviz_test(test_renderer)
