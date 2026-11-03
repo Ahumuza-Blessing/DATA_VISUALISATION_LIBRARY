@@ -8,7 +8,6 @@ This project was organized by Group 4 as a practical application of C++
 programming, modular design, and Object-Oriented Programming (OOP).
 
 > **Integration note:** This README describes the integrated reference
-> implementation in [Draft-Group4](https://github.com/TRomeoPrince/Draft-Group4).
 > It is prepared for the group's
 > [official repository](https://github.com/Ahumuza-Blessing/DATA_VISUALISATION_LIBRARY)
 > **when the matching source files and CMake configuration are transferred**.
