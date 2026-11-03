@@ -1,4 +1,3 @@
-
 #include "Renderer.hpp"
 
 #include "Axis.hpp"
@@ -14,10 +13,8 @@ constexpr double RIGHT = 30.0;
 constexpr double TOP = 55.0;
 constexpr double BOTTOM = 70.0;
 
-
-// Each graph should say what the horizontal and vertical values represent.
 std::string axisLabels(int width, int height,
-                       const std::string& xLabel, const std::string& yLabel) {
+                      const std::string& xLabel, const std::string& yLabel) {
     std::ostringstream svg;
     svg << "<text x=\"" << width / 2 << "\" y=\"" << (height - 18)
         << "\" text-anchor=\"middle\" font-size=\"15\""
@@ -36,9 +33,9 @@ std::string number(double value, int precision = 2) {
 }
 }
 
-// I keep the plotting margins in one place so the graphs use the same layout.
 std::string Renderer::escapeXML(const std::string& text) {
     std::string result;
+    result.reserve(text.size());
 
     for (char c : text) {
         switch (c) {
@@ -76,10 +73,15 @@ std::string Renderer::renderCountPlot(
     int width,
     int height,
     const std::string& title,
-    const Annotation& annotations
+    const Annotation& annotations,
+    const std::string& xLabel,
+    const std::string& yLabel
 ) {
     if (counts.empty()) {
         throw std::invalid_argument("Cannot render an empty count plot.");
+    }
+    if (width <= 0 || height <= 0) {
+        throw std::invalid_argument("Renderer width and height must be positive.");
     }
 
     std::size_t maxCount = 1;
@@ -87,60 +89,53 @@ std::string Renderer::renderCountPlot(
         maxCount = std::max(maxCount, item.second);
     }
 
-    double plotLeft = LEFT;
-    double plotRight = width - RIGHT;
-    double plotTop = TOP;
-    double plotBottom = height - BOTTOM;
-
+    const double plotLeft = LEFT;
+    const double plotRight = width - RIGHT;
+    const double plotTop = TOP;
+    const double plotBottom = height - BOTTOM;
     Axis yAxis(0.0, static_cast<double>(maxCount), plotBottom, plotTop);
 
-    double availableWidth = plotRight - plotLeft;
-    double slotWidth = availableWidth / static_cast<double>(counts.size());
-    double barWidth = slotWidth * 0.7;
+    const double availableWidth = plotRight - plotLeft;
+    const double slotWidth = availableWidth / static_cast<double>(counts.size());
+    const double barWidth = slotWidth * 0.7;
 
     std::ostringstream svg;
     svg << svgStart(width, height);
-
     svg << "<text x=\"" << width / 2
         << "\" y=\"30\" text-anchor=\"middle\" font-size=\"22\""
         << " font-family=\"sans-serif\">"
         << escapeXML(title) << "</text>\n";
-
     svg << "<line x1=\"" << plotLeft << "\" y1=\"" << plotBottom
         << "\" x2=\"" << plotRight << "\" y2=\"" << plotBottom
         << "\" stroke=\"black\"/>\n";
-
     svg << "<line x1=\"" << plotLeft << "\" y1=\"" << plotTop
         << "\" x2=\"" << plotLeft << "\" y2=\"" << plotBottom
         << "\" stroke=\"black\"/>\n";
 
     std::size_t index = 0;
     for (const auto& item : counts) {
-        double x = plotLeft + index * slotWidth + (slotWidth - barWidth) / 2.0;
-        double y = yAxis.scale(static_cast<double>(item.second));
-        double barHeight = plotBottom - y;
+        const double x = plotLeft + index * slotWidth + (slotWidth - barWidth) / 2.0;
+        const double y = yAxis.scale(static_cast<double>(item.second));
+        const double barHeight = plotBottom - y;
 
         svg << "<rect x=\"" << x << "\" y=\"" << y
             << "\" width=\"" << barWidth << "\" height=\"" << barHeight
             << "\" fill=\"steelblue\"/>\n";
-
         svg << "<text x=\"" << (x + barWidth / 2.0)
             << "\" y=\"" << (plotBottom + 20)
             << "\" text-anchor=\"middle\" font-size=\"12\""
             << " font-family=\"sans-serif\">"
             << escapeXML(item.first) << "</text>\n";
-
         svg << "<text x=\"" << (x + barWidth / 2.0)
             << "\" y=\"" << (y - 5)
             << "\" text-anchor=\"middle\" font-size=\"12\""
             << " font-family=\"sans-serif\">"
             << item.second << "</text>\n";
-
         ++index;
     }
 
     for (double tick : yAxis.ticks()) {
-        double y = yAxis.scale(tick);
+        const double y = yAxis.scale(tick);
         svg << "<line x1=\"" << (plotLeft - 5) << "\" y1=\"" << y
             << "\" x2=\"" << plotLeft << "\" y2=\"" << y
             << "\" stroke=\"black\"/>\n";
@@ -157,7 +152,7 @@ std::string Renderer::renderCountPlot(
             << escapeXML(note.text) << "</text>\n";
     }
 
-    svg << axisLabels(width, height, "Programme", "Frequency");
+    svg << axisLabels(width, height, escapeXML(xLabel), escapeXML(yLabel));
     svg << svgEnd();
     return svg.str();
 }
@@ -167,62 +162,61 @@ std::string Renderer::renderHistogram(
     int width,
     int height,
     const std::string& title,
-    const Annotation& annotations
+    const Annotation& annotations,
+    const std::string& xLabel,
+    const std::string& yLabel
 ) {
     if (bins.empty()) {
         throw std::invalid_argument("Cannot render an empty histogram.");
     }
+    if (width <= 0 || height <= 0) {
+        throw std::invalid_argument("Renderer width and height must be positive.");
+    }
 
     std::size_t maxCount = 1;
     for (const auto& bin : bins) {
-        maxCount = std::max(maxCount, bin.count);
+        maxCount = std::max(maxCount, bin.count());
     }
 
-    double plotLeft = LEFT;
-    double plotRight = width - RIGHT;
-    double plotTop = TOP;
-    double plotBottom = height - BOTTOM;
-
+    const double plotLeft = LEFT;
+    const double plotRight = width - RIGHT;
+    const double plotTop = TOP;
+    const double plotBottom = height - BOTTOM;
     Axis yAxis(0.0, static_cast<double>(maxCount), plotBottom, plotTop);
-
-    double availableWidth = plotRight - plotLeft;
-    double barWidth = availableWidth / static_cast<double>(bins.size());
+    const double availableWidth = plotRight - plotLeft;
+    const double barWidth = availableWidth / static_cast<double>(bins.size());
 
     std::ostringstream svg;
     svg << svgStart(width, height);
-
     svg << "<text x=\"" << width / 2
         << "\" y=\"30\" text-anchor=\"middle\" font-size=\"22\""
         << " font-family=\"sans-serif\">"
         << escapeXML(title) << "</text>\n";
-
     svg << "<line x1=\"" << plotLeft << "\" y1=\"" << plotBottom
         << "\" x2=\"" << plotRight << "\" y2=\"" << plotBottom
         << "\" stroke=\"black\"/>\n";
-
     svg << "<line x1=\"" << plotLeft << "\" y1=\"" << plotTop
         << "\" x2=\"" << plotLeft << "\" y2=\"" << plotBottom
         << "\" stroke=\"black\"/>\n";
 
     for (std::size_t i = 0; i < bins.size(); ++i) {
         const auto& bin = bins[i];
-        double x = plotLeft + i * barWidth;
-        double y = yAxis.scale(static_cast<double>(bin.count));
+        const double x = plotLeft + i * barWidth;
+        const double y = yAxis.scale(static_cast<double>(bin.count()));
 
         svg << "<rect x=\"" << x << "\" y=\"" << y
             << "\" width=\"" << barWidth
             << "\" height=\"" << (plotBottom - y)
             << "\" fill=\"seagreen\" stroke=\"white\"/>\n";
-
         svg << "<text x=\"" << (x + barWidth / 2.0)
             << "\" y=\"" << (plotBottom + 18)
             << "\" text-anchor=\"middle\" font-size=\"10\""
             << " font-family=\"sans-serif\">"
-            << number(bin.lower, 1) << "</text>\n";
+            << number(bin.lower(), 1) << "</text>\n";
     }
 
     for (double tick : yAxis.ticks()) {
-        double y = yAxis.scale(tick);
+        const double y = yAxis.scale(tick);
         svg << "<text x=\"" << (plotLeft - 10) << "\" y=\"" << (y + 4)
             << "\" text-anchor=\"end\" font-size=\"11\""
             << " font-family=\"sans-serif\">"
@@ -236,7 +230,7 @@ std::string Renderer::renderHistogram(
             << escapeXML(note.text) << "</text>\n";
     }
 
-    svg << axisLabels(width, height, "Marks", "Frequency");
+    svg << axisLabels(width, height, escapeXML(xLabel), escapeXML(yLabel));
     svg << svgEnd();
     return svg.str();
 }
@@ -246,16 +240,20 @@ std::string Renderer::renderKDE(
     int width,
     int height,
     const std::string& title,
-    const Annotation& annotations
+    const Annotation& annotations,
+    const std::string& xLabel,
+    const std::string& yLabel
 ) {
     if (points.size() < 2) {
         throw std::invalid_argument("KDE rendering needs at least two points.");
+    }
+    if (width <= 0 || height <= 0) {
+        throw std::invalid_argument("Renderer width and height must be positive.");
     }
 
     double minX = points.front().x;
     double maxX = points.front().x;
     double maxDensity = points.front().density;
-
     for (const auto& point : points) {
         minX = std::min(minX, point.x);
         maxX = std::max(maxX, point.x);
@@ -265,61 +263,51 @@ std::string Renderer::renderKDE(
     if (minX == maxX) {
         maxX = minX + 1.0;
     }
-
     if (maxDensity <= 0.0) {
         maxDensity = 1.0;
     }
 
-    double plotLeft = LEFT;
-    double plotRight = width - RIGHT;
-    double plotTop = TOP;
-    double plotBottom = height - BOTTOM;
-
+    const double plotLeft = LEFT;
+    const double plotRight = width - RIGHT;
+    const double plotTop = TOP;
+    const double plotBottom = height - BOTTOM;
     Axis xAxis(minX, maxX, plotLeft, plotRight);
     Axis yAxis(0.0, maxDensity, plotBottom, plotTop);
 
     std::ostringstream svg;
     svg << svgStart(width, height);
-
     svg << "<text x=\"" << width / 2
         << "\" y=\"30\" text-anchor=\"middle\" font-size=\"22\""
         << " font-family=\"sans-serif\">"
         << escapeXML(title) << "</text>\n";
-
     svg << "<line x1=\"" << plotLeft << "\" y1=\"" << plotBottom
         << "\" x2=\"" << plotRight << "\" y2=\"" << plotBottom
         << "\" stroke=\"black\"/>\n";
-
     svg << "<line x1=\"" << plotLeft << "\" y1=\"" << plotTop
         << "\" x2=\"" << plotLeft << "\" y2=\"" << plotBottom
         << "\" stroke=\"black\"/>\n";
-
     svg << "<polyline fill=\"none\" stroke=\"darkorange\""
         << " stroke-width=\"3\" points=\"";
-
     for (const auto& point : points) {
         svg << xAxis.scale(point.x) << ","
             << yAxis.scale(point.density) << " ";
     }
-
     svg << "\"/>\n";
 
     for (double tick : xAxis.ticks()) {
-        double x = xAxis.scale(tick);
+        const double x = xAxis.scale(tick);
         svg << "<text x=\"" << x << "\" y=\"" << (plotBottom + 20)
             << "\" text-anchor=\"middle\" font-size=\"11\""
             << " font-family=\"sans-serif\">"
             << number(tick, 1) << "</text>\n";
     }
-
     for (double tick : yAxis.ticks()) {
-        double y = yAxis.scale(tick);
+        const double y = yAxis.scale(tick);
         svg << "<text x=\"" << (plotLeft - 10) << "\" y=\"" << (y + 4)
             << "\" text-anchor=\"end\" font-size=\"11\""
             << " font-family=\"sans-serif\">"
             << number(tick, 3) << "</text>\n";
     }
-
     for (const auto& note : annotations.getItems()) {
         svg << "<text x=\"" << note.x << "\" y=\"" << note.y
             << "\" font-size=\"13\" font-family=\"sans-serif\""
@@ -327,7 +315,7 @@ std::string Renderer::renderKDE(
             << escapeXML(note.text) << "</text>\n";
     }
 
-    svg << axisLabels(width, height, "Marks", "Density");
+    svg << axisLabels(width, height, escapeXML(xLabel), escapeXML(yLabel));
     svg << svgEnd();
     return svg.str();
 }
