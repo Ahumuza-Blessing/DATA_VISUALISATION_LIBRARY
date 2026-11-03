@@ -7,13 +7,6 @@ The graphs are rendered as SVG images, without an external graphics library.
 This project was organized by Group 4 as a practical application of C++
 programming, modular design, and Object-Oriented Programming (OOP).
 
-> **Integration note:** This README describes the integrated reference
-> It is prepared for the group's
-> [official repository](https://github.com/Ahumuza-Blessing/DATA_VISUALISATION_LIBRARY)
-> **when the matching source files and CMake configuration are transferred**.
-> The official repository currently has some different filenames and module
-> interfaces, so copying this README alone will not make that code match.
-
 ## 1. Group members and responsibilities
 
 The names and allocations below follow the group's project records.
@@ -87,7 +80,7 @@ or export code.
 
 ## 4. Main modules
 
-| Module in this draft | What it does |
+| Module | What it does |
 | --- | --- |
 | `DataLoader` | Reads a CSV file into rows and columns of text |
 | `DataProcessor` | Trims text, removes blank rows, extracts columns, and converts numerical text |
@@ -107,15 +100,17 @@ assigned project area is called *Annotations*.
 
 ## 5. Project structure
 
-This is the structure of the **integrated draft** that the README documents.
+The main project files are organized as follows.
 
 ```text
-Draft-Group4/
 ├── data/
 │   ├── input/
-│   │   └── sample.csv
+│   │   ├── Marks.csv
+│   │   ├── monthly_sales.csv
+│   │   ├── student_marks.csv
+│   │   ├── subject_marks.csv
+│   │   └── subject_preferences.csv
 │   └── output/
-│       └── README.md
 ├── include/
 │   ├── DataLoader.hpp
 │   ├── DataProcessor.hpp
@@ -152,46 +147,40 @@ Draft-Group4/
 │   ├── test_kdeplot.cpp
 │   ├── test_axis.cpp
 │   ├── test_annotation.cpp
-│   ├── test_renderer.cpp
-│   ├── test_imageexporter.cpp
-│   └── test_integration.cpp
-├── .github/workflows/ci.yml
+│   ├── renderer_test.cpp
+│   └── test_imageexporter.cpp
+├── reports/
 ├── .gitignore
 ├── CMakeLists.txt
 └── README.md
 ```
 
-The official group's repository also keeps **weekly reports** in a `reports/`
-folder. The reports are not included in this draft reference.
+The repository also keeps weekly project reports in `reports/`.
 
 ## 6. Examples: finished graphs
 
-The `examples/` folder contains **four demonstration programs**:
+The `examples/` folder contains **four runnable demonstration programs**:
 
 | Example | Output |
 | --- | --- |
 | `countplot_example.cpp` | Complete categorical count plot |
 | `histogram_example.cpp` | Complete histogram of numerical marks |
 | `kdeplot_example.cpp` | Complete KDE density curve |
-| `complete_library_example.cpp` | Uses the main modules together and creates all three graphs |
+| `complete_library_example.cpp` | Uses the main modules together and creates all three plots |
 
 Each graph example includes a title, labeled axes, scales/ticks, and the
-required plot elements. Notes can be added through the Annotation module.
-The examples use `data/input/sample.csv` and export finished SVG files.
+required plot elements. The countplot, histogram, and complete-library
+examples read `data/input/student_marks.csv`; the standalone KDE example uses
+an in-code sample. They save SVG files under `data/output/`.
 
 An **example** demonstrates how someone can use the library. It does not
 replace a correctness test.
 
-## 7. Tests: individual modules and full integration
+## 7. Tests
 
-The group uses **two levels of testing**:
-
-1. **Individual module tests:** one test for each of the ten modules.
-   They check calculations, expected results, and selected invalid inputs.
-2. **Integration test:** `test_integration.cpp` checks the full flow:
-   CSV loading → processing → plot calculations → rendering → SVG export.
-
-`tests/` therefore contains **ten individual tests and one integration test**.
+CMake registers **ten tests**: tests for data loading and processing,
+statistics, plot calculations, axes, annotations, image export, and SVG
+rendering. They check expected results and selected invalid inputs.
 
 A **test** verifies an expected result and reports success or failure.
 A complete graph example may look correct but is not a substitute for tests.
@@ -206,32 +195,50 @@ No third-party plotting or graphics framework is required.
 
 From the repository root:
 
+On Windows with MinGW, select its generator explicitly:
+
+```powershell
+cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+```
+
+On systems where CMake can select the installed compiler automatically:
+
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+```
+
+Then build and run the test suite:
+
+```bash
 cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-The test command runs all eleven registered tests. GitHub Actions also builds
-the code, runs the tests, executes the four examples, and verifies the SVG
-exports when changes are pushed.
+The test command runs all ten registered tests.
 
 ### Run the example programs
 
+Run the examples from the repository root so their relative CSV paths resolve.
 On Linux, or when using a single-configuration generator:
 
 ```bash
-cd build
-./countplot_example
-./histogram_example
-./kdeplot_example
-./complete_library_example
+./build/countplot_example
+./build/histogram_example
+./build/kdeplot_example
+./build/complete_library_example
 ```
 
 On Windows, the executable location depends on the CMake generator. For a
-Visual Studio build, an example may be `build/Debug/histogram_example.exe`.
-Start it with **`build/` as the working directory**, since the sample CSV is
-copied to `build/data/input/sample.csv` during CMake configuration.
+Visual Studio build, executables are typically under `build/Debug/`, for
+example `build/Debug/histogram_example.exe`. With a single-configuration
+MinGW build, run them from PowerShell at the repository root:
+
+```powershell
+.\build\countplot_example.exe
+.\build\histogram_example.exe
+.\build\kdeplot_example.exe
+.\build\complete_library_example.exe
+```
 
 ## 9. Image output
 
@@ -258,56 +265,49 @@ ImageExporter::saveSVG(svg, "mygraph.svg");
 This creates `data/output/mygraph.svg`. If an explicit output path is
 provided, ImageExporter uses that requested path instead.
 
-Generated `.svg` files are ignored by Git in this draft; running examples or
-GitHub Actions does **not** automatically commit the images to GitHub.
+Generated `.svg` files are output artifacts; running examples does not
+automatically commit them to GitHub.
 
 ## 10. C++ and OOP design
 
-This draft uses **C++17** and separates declarations in `.hpp` files from
-implementations in matching `.cpp` files.
+Our library uses **C++17**. We keep public declarations in `include/` and
+implementations in `src/`; our examples and tests exercise those interfaces.
 
-- **Encapsulation:** `Axis` keeps its range values private and exposes
-  public methods for scaling, ticks, and updates. `Annotation` keeps its
-  collection of notes private.
-- **Reusability:** plot-calculation classes expose public functions that other
-  modules can call. Several of these functions are `static`.
-- **Separation of responsibilities:** plot modules calculate data, `Axis`
-  handles scaling, `Renderer` draws SVG, and `ImageExporter` saves files.
+- **Encapsulation:** `Axis` keeps its ranges private and provides methods for
+  scaling values, generating ticks, and updating ranges. `Annotation` hides
+  its collection and lets us add, clear, and read notes.
+- **Reusability:** We expose plot calculations and statistics through
+  reusable static methods, then pass their results to the renderer to create
+  SVG.
+- **Separation of responsibilities:** We use `DataLoader` to read CSV data,
+  `DataProcessor` to prepare it, plot modules to calculate plot data, `Axis`
+  for coordinate scaling, `Renderer` to create SVG markup, and
+  `ImageExporter` to write SVG files.
 
-**Not yet implemented:** This reference version has no class-inheritance
-hierarchy and no virtual-function polymorphism. Group reports should describe
-these concepts as implemented only after they exist in the actual code.
-
-**Namespace clarification:** `dataviz` is the **CMake library target name**,
-not a C++ namespace in this reference implementation. The classes currently
-use the global namespace; do not claim that the C++ code is inside
-`namespace dataviz` unless that is implemented separately.
+Our current design does not use a class-inheritance hierarchy or virtual
+functions. We use `dataviz` as the CMake library target name; our C++ classes
+are currently declared in the global namespace.
 
 ## 11. Naming conventions and integration
 
-- Use consistent **PascalCase** for the public module filenames, e.g.,
-  `Axis.hpp` and `Axis.cpp`.
-- Match the case exactly in `#include` directives. Linux builds are
-  case-sensitive.
-- Keep headers in `include/` and implementations in `src/`.
-- Keep a module's calculations separate from SVG drawing.
-- Create individual tests and verify the integrated build before merging code.
-- Use feature branches and pull requests when combining the group's work.
+We keep public headers in `include/` and implementations in `src/`, using
+matching names such as `Axis.hpp` and `Axis.cpp`. We match filename
+capitalization in `#include` directives so our code also works on
+case-sensitive filesystems, and keep calculations, rendering, and file export
+in their respective modules.
 
-This README is **ready to accompany the tested reference implementation** into
-the official project. Before importing it, transfer or reconcile the matching
-C++ source files, example programs, tests, and `CMakeLists.txt`. The official
-repository currently uses some different interfaces, capitalization, and a
-different folder layout, so copying this README **by itself** would leave parts
-of the documentation inaccurate.
+As we add modules or examples, we update `CMakeLists.txt` along with the
+relevant tests and documentation. Before sharing our changes, we build the
+project, run `ctest --output-on-failure`, and run affected examples from the
+repository root.
 
 ## 12. Project references and documentation
 
-The team's earlier planning referenced **Seaborn** for visualization ideas,
-**NumPy** for histogram concepts, **SciPy** for Gaussian KDE, and
-**Matplotlib** for plotting concepts. They are **conceptual references**, not
-runtime dependencies of this C++ implementation.
+Our `reports/` directory contains group progress reports and module
+documentation. We keep these records consistent with the current source,
+build configuration, and tests.
 
-The official repository's `reports/` folder contains the group's progress
-reports and module assignments. Each member should keep their own report
-consistent with the code they have actually implemented and tested.
+Our implementation has no third-party plotting dependency: we calculate plot
+data and generate SVG using the C++ standard library. External libraries or
+publications we use as background references are not runtime dependencies
+unless we explicitly add them to the build.

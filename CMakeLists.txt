@@ -31,7 +31,7 @@ target_compile_definitions(dataviz PRIVATE
 )
 
 # Build all runnable examples against the integrated library.
-foreach(example IN ITEMS countplot histogram kdeplot)
+foreach(example IN ITEMS countplot histogram kdeplot complete_library)
     add_executable(${example}_example examples/${example}_example.cpp)
     target_link_libraries(${example}_example PRIVATE dataviz)
 endforeach()

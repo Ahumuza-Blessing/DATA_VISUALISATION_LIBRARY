@@ -14,7 +14,8 @@
 int main() {
     try {
         // First read the marks from our sample CSV and turn them into numbers.
-        auto rows = DataProcessor::cleanRows(DataLoader::loadCSV("data/input/sample.csv"));
+        auto rows = DataProcessor::cleanRows(
+            DataLoader::loadCSV("data/input/student_marks.csv"));
         auto marks = DataProcessor::toNumeric(DataProcessor::getColumn(rows, 2));
 
         // The histogram module groups the marks; the Renderer does the drawing.
@@ -23,7 +24,7 @@ int main() {
         notes.add(520, 78, "Mean mark: " + std::to_string(Statistics::mean(marks)));
 
         std::string svg = Renderer::renderHistogram(
-            bins, 800, 500, "Student Marks Histogram", notes);
+            bins, 800, 500, "Student Marks Histogram", notes, "Mark", "Students");
         ImageExporter::saveSVG(svg, "histogram_example.svg");
 
         std::cout << "Created " << ImageExporter::outputFile("histogram_example.svg") << " with "
