@@ -12,7 +12,8 @@
 int main() {
     try {
         // A count plot uses the programme names rather than numerical marks.
-        auto rows = DataProcessor::cleanRows(DataLoader::loadCSV("data/input/sample.csv"));
+        auto rows = DataProcessor::cleanRows(
+            DataLoader::loadCSV("data/input/student_marks.csv"));
         auto programmes = DataProcessor::getColumn(rows, 1);
         auto counts = CountPlot::calculate(programmes);
 
@@ -20,7 +21,7 @@ int main() {
         notes.add(560, 80, "Programmes: " + std::to_string(counts.size()));
 
         auto svg = Renderer::renderCountPlot(
-            counts, 800, 500, "Students by Programme", notes);
+            counts, 800, 500, "Students by Programme", notes, "Programme", "Students");
         ImageExporter::saveSVG(svg, "countplot_example.svg");
 
         std::cout << "Created " << ImageExporter::outputFile("countplot_example.svg") << " for "
