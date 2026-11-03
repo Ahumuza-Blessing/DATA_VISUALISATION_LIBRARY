@@ -1,8 +1,8 @@
-define STATISTICS_HPP
+#ifndef STATISTICS_HPP
+#define STATISTICS_HPP
 
 #include <cstddef>
 #include <vector>
-
 // The Statistics functions calculate results that plots can use.
 // They are static because we do not need to store a Statistics object.
 class Statistics {
@@ -16,5 +16,4 @@ public:
     static double variance(const std::vector<double>& data);
     static double standardDeviation(const std::vector<double>& data);
 };
-
 #endif
