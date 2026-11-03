@@ -1,6 +1,8 @@
-KDEPlot Example Program Report
+# KDEPlot Example Program Report
+
 Author: MUGERWA SHADRACK STEPHEN 
  Subject: Review of the demonstration program for the KDEPlot kernel density estimation class
+
 1. Summary
 This report describes a short demonstration program that shows how to use the KDEPlot class from KDEPlot.hpp. The program creates a small dataset of student marks, asks KDEPlot::estimate for a kernel density curve made of 20 points, and prints each point to the console. It is intended as a usage example and a quick manual check that the library produces sensible output, rather than as an automated test.
 2. Program Description
