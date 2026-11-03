@@ -7,6 +7,7 @@
 #include "KDEPlot.hpp"
 
 #include <string>
+#include <vector>
 
 // The Renderer turns the calculated plot values into SVG drawings.
 // The different graphs should reuse Axis and Annotations where needed.
@@ -18,7 +19,9 @@ public:
         int width = 800,
         int height = 500,
         const std::string& title = "Count Plot",
-        const Annotation& annotations = Annotation()
+        const Annotation& annotations = Annotation(),
+        const std::string& xLabel = "Category",
+        const std::string& yLabel = "Count"
     );
 
     static std::string renderHistogram(
@@ -26,7 +29,9 @@ public:
         int width = 800,
         int height = 500,
         const std::string& title = "Histogram",
-        const Annotation& annotations = Annotation()
+        const Annotation& annotations = Annotation(),
+        const std::string& xLabel = "Value",
+        const std::string& yLabel = "Frequency"
     );
 
     static std::string renderKDE(
@@ -34,7 +39,9 @@ public:
         int width = 800,
         int height = 500,
         const std::string& title = "KDE Plot",
-        const Annotation& annotations = Annotation()
+        const Annotation& annotations = Annotation(),
+        const std::string& xLabel = "Value",
+        const std::string& yLabel = "Density"
     );
 
 private:
