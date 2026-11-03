@@ -1,4 +1,4 @@
-define STATISTICS_HPP
+#define STATISTICS_HPP
 
 #include <cstddef>
 #include <vector>
