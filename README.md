@@ -11,18 +11,18 @@ programming, modular design, and Object-Oriented Programming (OOP).
 
 The names and allocations below follow the group's project records.
 
-| Group member | Assigned module | Responsibility |
-| --- | --- | --- |
-| **ADONGA PHILLIP** | Data Loader | Read input datasets, initially CSV files |
-| **ATWINE JEANES** | Data Processing | Clean and prepare loaded data |
-| **AHUMUZA BLESSING** | Statistics | Implement descriptive statistical calculations |
-| **EGERU MICHAEL** | Count Plot | Calculate frequencies of categorical values |
-| **SERUGYA FAHAD** | Histogram | Group numerical values into bins |
-| **MUGERWA SHADRACK STEPHEN** | KDE Plot | Estimate smooth numerical density curves |
-| **TWINOMUJUNI ROMEO** | Axis | Calculate graph scales and tick values |
-| **WALUGEMBE MUHAISINAH N.** | Annotations | Manage notes and labels added to graphs |
-| **KISAKYE JEMIMA** | Renderer | Draw graph elements and produce SVG markup |
-| **NAMUBIRU LOUISE** | Image Exporter | Save rendered SVG content as image files |
+| Group member | Registration number | Assigned module | Responsibility |
+| --- | --- | --- | --- |
+| **ADONGA PHILLIP** | 25/U/30117/PS | Data Loader | Read input datasets, initially CSV files |
+| **ATWINE JEANES** | 25/U/08700/PS | Data Processing | Clean and prepare loaded data |
+| **AHUMUZA BLESSING** | 25/U/08678/PS | Statistics | Implement descriptive statistical calculations |
+| **EGERU MICHAEL** | 25/U/1512 | Count Plot | Calculate frequencies of categorical values |
+| **SERUGYA FAHAD** | 25/U/26725 | Histogram | Group numerical values into bins |
+| **MUGERWA SHADRACK STEPHEN** | 25/U/08752/PS | KDE Plot | Estimate smooth numerical density curves |
+| **TWINOMUJUNI ROMEO** | 25/U/04735/PS | Axis | Calculate graph scales and tick values |
+| **WALUGEMBE MUHAISINAH N.** | 25/U/08790/PS | Annotations | Manage notes and labels added to graphs |
+| **KISAKYE JEMIMA** | 25/U/08730/PS | Renderer | Draw graph elements and produce SVG markup |
+| **NAMUBIRU LOUISE** | 25/U/07958/PS | Image Exporter | Save rendered SVG content as image files |
 
 Each member works on a separate module. During integration, the modules share
 their outputs rather than repeating calculations or drawing code.
@@ -157,7 +157,12 @@ The main project files are organized as follows.
 
 The repository also keeps weekly project reports in `reports/`.
 
-## 6. Examples: finished graphs
+## 6. License
+
+This project is licensed under the [MIT License](LICENSE). By using, modifying,
+or distributing this library, you agree to the terms in the license.
+
+## 7. Examples: finished graphs
 
 The `examples/` folder contains **four runnable demonstration programs**:
 
@@ -176,7 +181,7 @@ an in-code sample. They save SVG files under `data/output/`.
 An **example** demonstrates how someone can use the library. It does not
 replace a correctness test.
 
-## 7. Tests
+## 8. Tests
 
 CMake registers **ten tests**: tests for data loading and processing,
 statistics, plot calculations, axes, annotations, image export, and SVG
@@ -185,7 +190,7 @@ rendering. They check expected results and selected invalid inputs.
 A **test** verifies an expected result and reports success or failure.
 A complete graph example may look correct but is not a substitute for tests.
 
-## 8. Requirements and build instructions
+## 9. Requirements and build instructions
 
 - A C++17-compatible compiler, such as GCC, Clang, or MSVC.
 - CMake **3.16 or newer**.
@@ -228,6 +233,12 @@ On Linux, or when using a single-configuration generator:
 ./build/complete_library_example
 ```
 
+Alternative single-command option to run all examples in sequence:
+
+```bash
+for exe in ./build/countplot_example ./build/histogram_example ./build/kdeplot_example ./build/complete_library_example; do "$exe"; done
+```
+
 On Windows, the executable location depends on the CMake generator. For a
 Visual Studio build, executables are typically under `build/Debug/`, for
 example `build/Debug/histogram_example.exe`. With a single-configuration
@@ -240,7 +251,13 @@ MinGW build, run them from PowerShell at the repository root:
 .\build\complete_library_example.exe
 ```
 
-## 9. Image output
+Alternative single-command option for PowerShell to run all examples in one go:
+
+```powershell
+foreach ($exe in @('.\build\countplot_example.exe', '.\build\histogram_example.exe', '.\build\kdeplot_example.exe', '.\build\complete_library_example.exe')) { & $exe }
+```
+
+## 10. Image output
 
 By default, **all generated SVG images are saved to the project's
 `data/output/` folder**, not to the build directory. The output folder is
