@@ -1,19 +1,18 @@
-# PHASE 2 REPORT: IMPLEMENTATION OF THE DATA PROCESSING MODULE
+IMPLEMENTATION REPORT
+Project Title: Development of a Data Visualization Library in C++  
+Student Name: Atwine Jeanes  
+Module: Data Processing  
 
-**Project Title:** Development of a Data Visualization Library in C++  
-**Student Name:** Atwine Jeanes  
-**Module:** Data Processing  
-**Phase:** Phase 2 — Implementation
 
-## 1. Introduction
+ 1. Introduction
 
-Phase 2 focuses on implementing the modules designed during Phase 1. My responsibility is the Data Processing module, which prepares numerical data for use by the Statistics and Plotting components of the C++ Data Visualization Library.
+This report focuses on implementing the modules designed during last week's report. My responsibility is the Data Processing module, which prepares numerical data for use by the Statistics and Plotting components of the C++ Data Visualization Library.
 
-## 2. Objectives
+2. Objectives
 
-The objectives of this phase are to implement the data-processing functions, handle invalid numerical values, ensure compatibility with other modules, and prepare the implementation for testing and integration.
+The objectives of this part is to implement the data-processing functions, handle invalid numerical values, ensure compatibility with other modules, and prepare the implementation for testing and integration.
 
-## 3. Implementation Activities
+3. Implementation Activities
 
 Following the creation of the header file in Phase 1, the implementation was prepared in `DataProcessing.cpp`. The module is designed to provide the following functions:
 
@@ -47,7 +46,7 @@ The Data Processing module is intended to prepare numerical data for statistical
 The main considerations include handling invalid data, preventing division by zero, ensuring consistency between the header and source files, and maintaining compatibility with other modules. Testing will be necessary to verify that the functions behave as expected.
 
  7. Class-Layout Diagrams
-Class-layout diagrams will be drawn on paper to show the actual classes, member data, member functions, access specifiers (`public`, `private`, and `protected`), and inheritance relationships where applicable. Clear photographs of the diagrams will be submitted alongside this report as required.
+Class-layout diagrams will be drawn on paper to show the actual classes, member data, member functions, access specifiers (`public`, `private`, and `protected`), and inheritance relationships where applicable. 
 
 8. Conclusion
-Phase 2 focuses on implementing the Data Processing module and preparing it for testing and integration. The proposed functions provide essential numerical data-processing operations that support the wider Data Visualization Library. The application of object-oriented programming principles also contributes to a modular, reusable, and maintainable design. Compilation, testing, and integration will establish whether the implementation meets the project requirements.
+This part of the report focuses on implementing the Data Processing module and preparing it for testing and integration. The proposed functions provide essential numerical data-processing operations that support the wider Data Visualization Library. The application of object-oriented programming principles also contributes to a modular, reusable, and maintainable design. Compilation, testing, and integration will establish whether the implementation meets the project requirements.

@@ -1,28 +1,18 @@
-#ifndef DATA_LOADER_HPP
-#define DATA_LOADER_HPP
+#ifndef DATALOADER_HPP
+#define DATALOADER_HPP
 
-#include <cstddef>
 #include <string>
 #include <vector>
 
-class DataLoader
-{
-private:
-    std::vector<std::string> headers;
-    std::vector<std::vector<std::string>> rows;
-
+// I need to read the CSV file before I can make any graph.
+// Each row is stored as a vector of text values.
+class DataLoader {
 public:
-    // Load a CSV file. Returns false if loading fails.
-    bool loadCSV(const std::string& filename);
+    // The rest of the library will use this public interface.
+    using Row = std::vector<std::string>;
+    using Table = std::vector<Row>;
 
-    // Read the column names.
-    const std::vector<std::string>& getHeaders() const;
-
-    // Read all data rows.
-    const std::vector<std::vector<std::string>>& getRows() const;
-
-    // Get the number of data rows, excluding the header.
-    std::size_t getRowCount() const;
+    static Table loadCSV(const std::string& filePath, char delimiter = ',');
 };
 
 #endif
