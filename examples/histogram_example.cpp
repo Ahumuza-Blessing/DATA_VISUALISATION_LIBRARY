@@ -24,7 +24,7 @@ int main() {
         notes.add(520, 78, "Mean mark: " + std::to_string(Statistics::mean(marks)));
 
         std::string svg = Renderer::renderHistogram(
-            bins, 800, 500, "Student Marks Histogram", notes, "Mark", "Students");
+            bins, 800, 500, "Student Marks Histogram", notes, "Mark", "Frequency");
         ImageExporter::saveSVG(svg, "histogram_example.svg");
 
         std::cout << "Created " << ImageExporter::outputFile("histogram_example.svg") << " with "
