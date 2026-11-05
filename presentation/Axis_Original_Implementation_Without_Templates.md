@@ -1,11 +1,13 @@
 # AXIS MODULE — C++ DATA VISUALIZATION LIBRARY
 
-## Individual Technical Presentation and Code Defense
+## Original Axis Implementation — Individual Technical Presentation and Code Defense
 
 **Repository:** `Ahumuza-Blessing/DATA_VISUALISATION_LIBRARY`  
 **Working branch:** `Romeo`  
-**Module:** `Axis`  
+**Module:** `Axis` (original implementation, without templates)  
 **Files covered:** `include/Axis.hpp`, `src/Axis.cpp`, `tests/test_axis.cpp`
+
+> **Scope:** This document explains the original Axis implementation before the separate template enhancement. It does not describe the newer `Romeo-template` branch.
 
 > **How to use this guide:** Text under **What I would say** is a suggested spoken explanation. Read the code and understand the examples rather than memorizing sentences. The explanations below are based on the three Axis files previously retrieved from the `Romeo` branch; this document does not claim a fresh build or integration test was performed.
 
