@@ -12,6 +12,7 @@
 #include <exception>
 #include <iostream>
 #include <string>
+#include <vector>
 
 int main() {
     try {
@@ -29,7 +30,12 @@ int main() {
 
         const auto counts = CountPlot::calculate(programmes);
         const auto bins = Histogram::build(marks, 5);
-        const auto density = KDEPlot::estimate(marks, 120);
+        const std::vector<double> kdeMarks{
+            55, 60, 62, 65, 67,
+            70, 70, 72, 75, 80,
+            85, 90
+        };
+        const auto density = KDEPlot::estimate(kdeMarks, 100);
 
         Annotation notes;
         notes.add(540, 80, "Mean mark: " + std::to_string(average));
@@ -45,7 +51,7 @@ int main() {
             "complete_histogram.svg");
         ImageExporter::saveSVG(
             Renderer::renderKDE(
-                density, 800, 500, "Student Marks Density", notes,
+                density, 800, 500, "Student Marks KDE", Annotation(),
                 "Mark", "Density"),
             "complete_kdeplot.svg");
 
