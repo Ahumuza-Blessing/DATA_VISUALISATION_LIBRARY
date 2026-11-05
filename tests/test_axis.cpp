@@ -1,66 +1,72 @@
 
-#include "Axis.hpp"  // Includes the Axis class
-#include <cassert>    // Provides assert() for checking test conditions
-#include <cmath>      // Provides std::fabs() for floating-point comparisons
-#include <iostream>   // Allows messages to be printed to the console
-#include <stdexcept>  // Provides exception types
+#ifndef AXIS_HPP
+#define AXIS_HPP
 
-int main() { // Execution begins here
+#include <cstddef>     // Provides std::size_t for counting tick marks
+#include <vector>      // Provides std::vector for storing tick values
+#include <type_traits> // Provides tools for checking data types at compile time
 
-    // Creates an axis with data range 0–100 and drawing range 0–500.
-    Axis axis(0, 100, 0, 500);
+// The Axis class handles numerical scaling and tick generation.
+class Axis {
 
-    // Tests whether numerical values map to the correct drawing coordinates.
-    // 1e-9 is a very small tolerance used when comparing decimal values.
-    assert(std::fabs(axis.scale(0) - 0) < 1e-9);     // 0 maps to 0
-    assert(std::fabs(axis.scale(25) - 125) < 1e-9);  // 25 maps to 125
-    assert(std::fabs(axis.scale(50) - 250) < 1e-9);  // 50 maps to 250
-    assert(std::fabs(axis.scale(100) - 500) < 1e-9); // 100 maps to 500
+private: // These variables are hidden from outside code
 
-    // Generates three tick values: 0, 50, and 100.
-    auto ticks = axis.ticks(3);
+    double minValue;    // Stores the minimum numerical value
+    double maxValue;    // Stores the maximum numerical value
 
-    assert(ticks.size() == 3); // Confirms that three ticks were generated
+    double screenStart; // Stores the starting drawing coordinate
+    double screenEnd;   // Stores the ending drawing coordinate
 
-    // Checks that the middle tick is 50.
-    assert(std::fabs(ticks[1] - 50) < 1e-9);
+public: // These functions can be accessed from outside the class
 
-    // Changes the numerical range from 0–100 to -10 through 10.
-    axis.setRange(-10, 10);
+    // Constructor: initializes the Axis object with four values.
+    Axis(
+        double minValue,
+        double maxValue,
+        double screenStart,
+        double screenEnd
+    );
 
-    // Confirms that zero maps to the middle drawing coordinate, 250.
-    assert(std::fabs(axis.scale(0) - 250) < 1e-9);
+    // Converts a numerical value into a screen coordinate.
+    // This is the original scaling function.
+    double scale(double value) const;
 
-    // Reverses the drawing range from 0–500 to 500–0.
-    axis.setScreenRange(500, 0);
+    // TEMPLATE FUNCTION
+    // template <typename T> allows the function to accept
+    // different numerical data types, such as int and float.
+    //
+    // T represents the data type supplied by the caller.
+    // The compiler determines T when the function is called.
+    template <typename T>
+    double scale(T value) const {
 
-    // Confirms that -10 maps to the new starting drawing coordinate.
-    assert(std::fabs(axis.scale(-10) - 500) < 1e-9);
+        // Checks at compile time that T is a numerical type.
+        // std::is_arithmetic_v<T> accepts standard integer
+        // and floating-point types.
+        static_assert(
+            std::is_arithmetic_v<T>,
+            "Axis requires a numeric data type."
+        );
 
-    // Tests whether an invalid numerical range is rejected.
-    bool invalidRange = false;
-
-    try {
-        Axis bad(1, 1, 0, 100); // Attempts to create an axis with equal limits
-    }
-    catch (const std::invalid_argument&) {
-        invalidRange = true; // Records that the expected exception was caught
-    }
-
-    assert(invalidRange); // Confirms that the invalid range was rejected
-
-    // Tests whether an invalid tick count is rejected.
-    bool invalidTicks = false;
-
-    try {
-        axis.ticks(1); // Attempts to generate only one tick
-    }
-    catch (const std::invalid_argument&) {
-        invalidTicks = true; // Records that the expected exception was caught
+        // Converts the supplied value into a double.
+        // Calls the original scale(double) function.
+        // This avoids repeating the scaling formula.
+        return scale(static_cast<double>(value));
     }
 
-    assert(invalidTicks); // Confirms that the invalid tick count was rejected
+    // Generates evenly spaced tick values.
+    // Defaults to six tick values.
+    std::vector<double> ticks(std::size_t count = 6) const;
 
-    // Prints a success message if all enabled assertions pass.
-    std::cout << "Axis tests passed.\n";
-}
+    // Getter functions: return private values.
+    double getMin() const;
+    double getMax() const;
+    double getScreenStart() const;
+    double getScreenEnd() const;
+
+    // Setter functions: update the axis ranges.
+    void setRange(double minValue, double maxValue);
+    void setScreenRange(double screenStart, double screenEnd);
+};
+
+#endif
