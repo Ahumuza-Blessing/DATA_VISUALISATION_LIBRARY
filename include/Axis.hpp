@@ -1,42 +1,47 @@
-#ifndef AXIS_HPP
-#define AXIS_HPP
 
-#include <cstddef>
-#include <vector>
+#ifndef AXIS_HPP       // Checks whether AXIS_HPP has not already been defined
+#define AXIS_HPP       // Defines the header guard to prevent repeated inclusion
 
-// The Axis needs the minimum and maximum data values.
-// It also needs the starting and ending drawing positions.
-// I will use both ranges when working out where each value should appear.
+#include <cstddef>     // Provides std::size_t for counting tick marks
+#include <vector>      // Provides std::vector for storing multiple tick values
+
+// The Axis class handles numerical scaling and tick generation.
 class Axis {
-private:
-    // These are the values in the original dataset.
-    double minValue;
-    double maxValue;
-    // These are the positions where the axis is drawn.
-    double screenStart;
-    double screenEnd;
 
-public:
+private:                // These variables are hidden from outside code
+
+    double minValue;    // Stores the minimum numerical value in the dataset
+    double maxValue;    // Stores the maximum numerical value in the dataset
+
+    double screenStart; // Stores the starting drawing coordinate
+    double screenEnd;   // Stores the ending drawing coordinate
+
+public:                 // These functions can be accessed from outside the class
+
+    // Constructor: initializes the Axis object with four values.
     Axis(
-        double minValue,
-        double maxValue,
-        double screenStart,
-        double screenEnd
+        double minValue,     // Minimum numerical value
+        double maxValue,     // Maximum numerical value
+        double screenStart,  // Starting drawing coordinate
+        double screenEnd     // Ending drawing coordinate
     );
 
-    // This maps a data value to its drawing position.
+    // Converts a numerical value into a screen coordinate.
     double scale(double value) const;
 
-    // The tick values mark divisions along the axis.
+    // Generates evenly spaced tick values.
+    // Defaults to six tick values when no count is supplied.
     std::vector<double> ticks(std::size_t count = 6) const;
 
-    double getMin() const;
-    double getMax() const;
-    double getScreenStart() const;
-    double getScreenEnd() const;
+    // Getter functions: return private values without modifying them.
+    double getMin() const;          // Returns the minimum numerical value
+    double getMax() const;          // Returns the maximum numerical value
+    double getScreenStart() const;  // Returns the starting drawing coordinate
+    double getScreenEnd() const;    // Returns the ending drawing coordinate
 
-    void setRange(double minValue, double maxValue);
-    void setScreenRange(double screenStart, double screenEnd);
+    // Setter functions: modify the numerical or drawing ranges.
+    void setRange(double minValue, double maxValue); // Updates the data range
+    void setScreenRange(double screenStart, double screenEnd); // Updates drawing coordinates
 };
 
-#endif
+#endif // Ends the header guard
