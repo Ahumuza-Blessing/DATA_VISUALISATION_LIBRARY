@@ -1,33 +1,41 @@
-#include "Annotation.hpp"
-#include "CountPlot.hpp"
-#include "DataLoader.hpp"
-#include "DataProcessor.hpp"
-#include "ImageExporter.hpp"
-#include "Renderer.hpp"
+#ifndef COUNTPLOT_HPP // Checks whether this header has already been included
+#define COUNTPLOT_HPP // Defines the header guard to prevent repeated inclusion
 
-#include <exception>
-#include <iostream>
-#include <string>
+#include <cstddef> // Provides std::size_t, used for storing category counts
+#include <map>     // Provides std::map, which stores data as key-value pairs
+#include <string>  // Provides std::string for storing category names
+#include <vector>  // Provides std::vector for storing a list of categories
 
-int main() {
-    try {
-        // A count plot uses the programme names rather than numerical marks.
-        auto rows = DataProcessor::cleanRows(
-            DataLoader::loadCSV("data/input/student_marks.csv"));
-        auto programmes = DataProcessor::getColumn(rows, 1);
-        auto counts = CountPlot::calculate(programmes);
+// The CountPlot class counts how many times each category appears.
+// For example, A, B, A, C, A gives A=3, B=1, C=1.
+// The Renderer can use these counts to draw the bars of a count plot.
+class CountPlot {
 
-        Annotation notes;
-        notes.add(560, 80, "Programmes: " + std::to_string(counts.size()));
+public: // Makes the following declarations accessible outside the class
 
-        auto svg = Renderer::renderCountPlot(
-            counts, 800, 500, "Students by Programme", notes, "Programme", "Students");
-        ImageExporter::saveSVG(svg, "countplot_example.svg");
+    // 'using' creates a shorter name for a longer data type.
+    // Counts is another name for std::map<std::string, std::size_t>.
+    //
+    // std::string represents the category name, such as "Computer Science".
+    // std::size_t represents how many times that category appears.
+    //
+    // Example:
+    // "Computer Science" -> 5
+    // "Information Technology" -> 3
+    //
+    // A map also keeps its keys sorted alphabetically by default.
+    using Counts = std::map<std::string, std::size_t>;
 
-        std::cout << "Created " << ImageExporter::outputFile("countplot_example.svg") << " for "
-                  << counts.size() << " programme categories.\n";
-    } catch (const std::exception& error) {
-        std::cerr << "Count plot example failed: " << error.what() << "\n";
-        return 1;
-    }
-}
+    // Declares a function that counts occurrences of each category.
+    //
+    // static means we can call the function using the class name,
+    // without creating a CountPlot object.
+    //
+    // const means the function cannot modify the input vector.
+    // & means the vector is passed by reference, avoiding a full copy.
+    //
+    // The function returns a Counts map containing the results.
+    static Counts calculate(const std::vector<std::string>& categories);
+};
+
+#endif // Ends the header guard
