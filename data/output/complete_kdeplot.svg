@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400" y="30" text-anchor="middle" font-size="22" font-family="sans-serif">Student Marks KDE</text>
+<line x1="70" y1="430" x2="770" y2="430" stroke="black"/>
+<line x1="70" y1="55" x2="70" y2="430" stroke="black"/>
+<polyline fill="none" stroke="darkorange" stroke-width="3" points="70,429.307 77.0707,429.016 84.1414,428.619 91.2121,428.087 98.2828,427.382 105.354,426.461 112.424,425.273 119.495,423.762 126.566,421.864 133.636,419.51 140.707,416.63 147.778,413.15 154.848,408.996 161.919,404.1 168.99,398.398 176.061,391.835 183.131,384.369 190.202,375.97 197.273,366.626 204.343,356.34 211.414,345.133 218.485,333.043 225.556,320.124 232.626,306.448 239.697,292.095 246.768,277.162 253.838,261.751 260.909,245.974 267.98,229.95 275.051,213.803 282.121,197.661 289.192,181.659 296.263,165.935 303.333,150.635 310.404,135.91 317.475,121.917 324.545,108.819 331.616,96.7806 338.687,85.9688 345.758,76.5463 352.828,68.6673 359.899,62.471 366.97,58.0749 374.04,55.5671 381.111,55 388.182,56.384 395.253,59.6835 402.323,64.8151 409.394,71.6476 416.465,80.0058 423.535,89.6765 430.606,100.417 437.677,111.965 444.747,124.053 451.818,136.416 458.889,148.808 465.96,161.01 473.03,172.839 480.101,184.156 487.172,194.866 494.242,204.923 501.313,214.326 508.384,223.111 515.455,231.354 522.525,239.151 529.596,246.62 536.667,253.884 543.737,261.067 550.808,268.282 557.879,275.627 564.949,283.177 572.02,290.982 579.091,299.062 586.162,307.409 593.232,315.986 600.303,324.735 607.374,333.575 614.444,342.412 621.515,351.141 628.586,359.658 635.657,367.86 642.727,375.654 649.798,382.961 656.869,389.716 663.939,395.875 671.01,401.413 678.081,406.323 685.152,410.614 692.222,414.313 699.293,417.456 706.364,420.089 713.434,422.264 720.505,424.035 727.576,425.458 734.646,426.584 741.717,427.463 748.788,428.139 755.859,428.653 762.929,429.037 770,429.32 "/>
+<text x="70" y="450" text-anchor="middle" font-size="11" font-family="sans-serif">35.9</text>
+<text x="210" y="450" text-anchor="middle" font-size="11" font-family="sans-serif">50.6</text>
+<text x="350" y="450" text-anchor="middle" font-size="11" font-family="sans-serif">65.2</text>
+<text x="490" y="450" text-anchor="middle" font-size="11" font-family="sans-serif">79.8</text>
+<text x="630" y="450" text-anchor="middle" font-size="11" font-family="sans-serif">94.4</text>
+<text x="770" y="450" text-anchor="middle" font-size="11" font-family="sans-serif">109.1</text>
+<text x="60" y="434" text-anchor="end" font-size="11" font-family="sans-serif">0.000</text>
+<text x="60" y="359" text-anchor="end" font-size="11" font-family="sans-serif">0.007</text>
+<text x="60" y="284" text-anchor="end" font-size="11" font-family="sans-serif">0.014</text>
+<text x="60" y="209" text-anchor="end" font-size="11" font-family="sans-serif">0.021</text>
+<text x="60" y="134" text-anchor="end" font-size="11" font-family="sans-serif">0.027</text>
+<text x="60" y="59" text-anchor="end" font-size="11" font-family="sans-serif">0.034</text>
+<text x="400" y="482" text-anchor="middle" font-size="15" font-family="sans-serif">Mark</text>
+<text x="22" y="250" transform="rotate(-90 22 250)" text-anchor="middle" font-size="15" font-family="sans-serif">Density</text>
+</svg>
